@@ -1,7 +1,4 @@
 
-
-
-
 .cli_table <- 
 test_that("cli_table", {
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
@@ -9,8 +6,40 @@ test_that("cli_table", {
 
   tbl <- cli_table(df)
 
-  expect_snapshot(print_text_table_with_base(df))
+  expect_snapshot(cat(tbl, sep = "\n"))
 })
+
+
+
+.box_line <- 
+test_that("box_line", {
+  local_reproducible_output(crayon = TRUE, unicode = TRUE)
+
+  ### single
+  line <- box_line(cli_box_styles()["single", ], 80)
+
+  expect_s3_class(line, "ansi_string")
+  expect_equal(ansi_nchar(line), 80)
+  
+  bline <- box_line(cli_box_styles()["single", ], 80, top = FALSE)
+  expect_equal(ansi_nchar(bline), 80)
+
+
+  ### double
+  line <- box_line(cli_box_styles()["double", ], 99)
+  expect_equal(ansi_nchar(line), 99)
+
+  ### classic
+  line <- box_line(cli_box_styles()["classic", ], 37)
+  expect_equal(ansi_nchar(line), 37)
+
+  ### none
+  line <- box_line(cli_box_styles()["none", ], 60)
+  expect_equal(ansi_nchar(line), 60)
+  expect_identical(as.character(line), strrep(" ", 60))
+})
+
+
 
 .extend_strings <- 
 test_that("extend_strings", {
@@ -35,7 +64,7 @@ test_that("column_widths", {
 
   ### header = FALSE
   ws2 <- column_widths(mat, header = FALSE)
-  expect_equal(unique(ws2), 3)
+  expect_equal(ws2, c(3L, 3L, 3L, 3L, 6L))
 })
 
 
@@ -68,37 +97,12 @@ test_that("cli_row", {
   row <- names(iris)
 
   x <- cli_row(row)
+  expect_snapshot(cat(x, "\n"))
 
-  cat(x, "\n")
   x2 <- cli_row(add_margin_to_row_cells(row, 2))
-
-  df <- head(iris)
-  for (i in seq_len(nrow(df))) {
-    cat(cli_row(add_margin_to_row_cells(df[i, ], 1)), "\n")
-  }
+  expect_snapshot(cat(x2, "\n"))
 
 })
 
-
-
-# test_that("print_text_table_with_huxtable", {
-#   # we enable crayon and color output for this test
-#   local_reproducible_output(crayon = TRUE)
-#   df <- head(iris)
-
-#   withr::local_options(list(cli.num_colors = 256))
-
-#   expect_snapshot(print_text_table_with_huxtable(df))
-#   expect_snapshot(print_text_table_with_huxtable(df, styler = NULL))
-
-#   expect_snapshot(print_text_table_with_huxtable(df, title = "Title"))
-
-#   expect_snapshot(print_text_table_with_huxtable(df, footnote = "Footnote"))
-
-#   expect_snapshot(print_text_table_with_huxtable(df, heatmap_columns = c(1, 3)))
-
-#   expect_snapshot(print_text_table_with_huxtable(df, hilite_rows = c(1, 3)))
-  
-# })
 
 

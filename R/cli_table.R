@@ -1,4 +1,4 @@
-cli_table <- function(mat, header = TRUE, sep = "|", ...) {
+cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
   mat <- as.matrix(mat)
 
   cws <- column_widths(mat, header = header)
@@ -12,40 +12,55 @@ cli_table <- function(mat, header = TRUE, sep = "|", ...) {
   }
   if (header) colnames(mat2) <- headers
   
-  browser()
 
-  cat( cli_row(headers), "\n")
-  for (i in seq_len(nrow(mat))) {
-    cat(cli_row(mat2[i, ]), "\n")
+  chars <- cli_box_styles()[border_style, ]
+  sep <- chars$vertical
+
+  tbl <- sapply(seq_len(nrow(mat)), \(i) cli_row(mat2[i, ], sep = sep))
+  if (header) {
+    header_line <- cli_row(headers, sep = sep)
+    width <- ansi_nchar(header_line)
+    tbl <- c(
+      box_line(chars, width),
+      header_line,
+      box_line(chars, width, top = FALSE), 
+      tbl
+    )
   }
-  # row1 <- sapply(
+  tbl <- ansi_string(tbl)
 
-
-
-  .column <- function(col) {
-    # browser()
-    colstr <- cli::ansi_columns(as.character(df[[col]]), max_cols = 1, fill = "rows")
-
-  }
-  res <- .column(names(df)[1])
-  cli::boxx(res)
-    browser()
+  tbl
 }
 
 cli_row <- function(row, sep = cli_box_styles()[["single", "vertical"]]) {
-  paste0(paste0(sep, row, collapse = ""), sep)
+  ansi_string(paste0(paste0(sep, row, collapse = ""), sep))
+}
+
+box_line <- function(symbols, width, top = TRUE) {
+  left <- symbols$top_left
+  right <- symbols$top_right
+  if (!top) {
+    left <- symbols$bottom_left
+    right <- symbols$bottom_right
+  }
+  ansi_string(paste0(
+    left, 
+    strrep(symbols$horizontal, width -  ansi_nchar(left) - ansi_nchar(right)),
+    right
+  ))
 }
 
 
+
 extend_strings <- function(xs, width) {
-  nb_to_fill <- width - cli::ansi_nchar(xs)
+  nb_to_fill <- width - ansi_nchar(xs)
   paste0(cli_make_space(as.integer(nb_to_fill > 0)), xs, cli_make_space(nb_to_fill - 1))
 }
 
 column_widths <- function(mat, header = TRUE) {
   headers <- NULL
   if (header) headers <- colnames(mat)
-  .colwidth <- function(col) {  max(cli::ansi_nchar(c(mat[[col]], headers[[col]])))   }
+  .colwidth <- function(col) {  max(ansi_nchar(c(mat[, col], headers[[col]])))   }
   
   sapply(seq_len(ncol(mat)), .colwidth)
 }
@@ -88,7 +103,7 @@ cli_box_styles <- function ()
         vertical = "|", horizontal = "-"), none = list(top_left = " ", 
         top_right = " ", bottom_right = " ", bottom_left = " ", 
         vertical = " ", horizontal = " "))
-    if (!cli::is_utf8_output()) {
+    if (!is_utf8_output()) {
         for (n in setdiff(names(styles), c("classic", "none"))) {
             styles[[n]] <- styles[["classic"]]
         }
