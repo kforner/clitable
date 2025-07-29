@@ -1,3 +1,49 @@
+.box_line <- 
+test_that("box_line", {
+  local_reproducible_output(crayon = TRUE, unicode = TRUE)
+
+  ### single
+  ws <- ansi_nchar(names(iris))
+  line <- box_line(BOX_STYLES$single, ws)
+
+  expect_s3_class(line, "ansi_string")
+  expect_identical(as.character(line), "┌────────────┬───────────┬────────────┬───────────┬───────┐")
+  expect_equal(ansi_nchar(line), 80)
+
+  bline <- box_line(BOX_STYLES$single, ws, top = FALSE)
+  expect_identical(as.character(bline), "└────────────┴───────────┴────────────┴───────────┴───────┘")
+  
+  ### single-double
+  style <- "single-double"
+  line <- box_line(BOX_STYLES[[style]], ws)
+  expect_identical(as.character(line), "╓────────────╥───────────╥────────────╥───────────╥───────╖")
+  bline <- box_line(BOX_STYLES[[style]], ws, top = FALSE)
+  expect_identical(as.character(bline), "╙────────────╨───────────╨────────────╨───────────╨───────╜")
+
+  ### double-single
+  style <- "double-single"
+  line <- box_line(BOX_STYLES[[style]], ws)
+  expect_identical(as.character(line), "╒════════════╤═══════════╤════════════╤═══════════╤═══════╕")
+  bline <- box_line(BOX_STYLES[[style]], ws, top = FALSE)
+  expect_identical(as.character(bline), "╘════════════╧═══════════╧════════════╧═══════════╧═══════╛")
+
+  ### double
+  line <- box_line(BOX_STYLES$double, ws)
+  expect_identical(as.character(line), "╔════════════╦═══════════╦════════════╦═══════════╦═══════╗")
+  bline <- box_line(BOX_STYLES$double, ws, top = FALSE)
+  expect_identical(as.character(bline), "╚════════════╩═══════════╩════════════╩═══════════╩═══════╝")
+
+
+  ### classic
+  line <- box_line(BOX_STYLES$classic, ws)
+  expect_identical(as.character(line), "+------------+-----------+------------+-----------+-------+")
+  bline <- box_line(BOX_STYLES$classic, ws, top = FALSE)
+  expect_identical(as.character(bline), "+------------+-----------+------------+-----------+-------+")
+
+})
+
+
+
 
 .cli_table <- 
 test_that("cli_table", {
@@ -5,39 +51,12 @@ test_that("cli_table", {
   df <- head(iris)
 
   tbl <- cli_table(df)
-
+browser()
   expect_snapshot(cat(tbl, sep = "\n"))
 })
 
 
 
-.box_line <- 
-test_that("box_line", {
-  local_reproducible_output(crayon = TRUE, unicode = TRUE)
-
-  ### single
-  line <- box_line(cli_box_styles()["single", ], 80)
-
-  expect_s3_class(line, "ansi_string")
-  expect_equal(ansi_nchar(line), 80)
-  
-  bline <- box_line(cli_box_styles()["single", ], 80, top = FALSE)
-  expect_equal(ansi_nchar(bline), 80)
-
-
-  ### double
-  line <- box_line(cli_box_styles()["double", ], 99)
-  expect_equal(ansi_nchar(line), 99)
-
-  ### classic
-  line <- box_line(cli_box_styles()["classic", ], 37)
-  expect_equal(ansi_nchar(line), 37)
-
-  ### none
-  line <- box_line(cli_box_styles()["none", ], 60)
-  expect_equal(ansi_nchar(line), 60)
-  expect_identical(as.character(line), strrep(" ", 60))
-})
 
 
 
