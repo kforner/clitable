@@ -2,7 +2,6 @@ cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
   mat <- as.matrix(mat)
 
   cws <- column_widths(mat, header = header)
-
   headers <- colnames(mat)
 
   mat2 <- mat
@@ -12,75 +11,26 @@ cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
   }
   if (header) colnames(mat2) <- headers
   
-
   chars <- BOX_STYLES[[border_style]]
   V <- chars$V
-
   tbl <- sapply(seq_len(nrow(mat)), \(i) cli_row(mat2[i, ], sep = V))
   if (header) {
-    header_line <- cli_row(headers, sep = V)
-    width <- ansi_nchar(header_line)
     tbl <- c(
-      box_line(chars, width),
-      header_line,
-      box_line(chars, width, top = FALSE), 
+      cli_row(headers, sep = V),
+      box_line(chars, cws, pos = "MID"), 
       tbl
     )
   }
+  tbl <- c(box_line(chars, cws), tbl, box_line(chars, cws, pos = "BOTTOM")) 
+
   tbl <- ansi_string(tbl)
 
   tbl
 }
 
-BOX_STYLES <- list(
-  single = list(
-    TOP = list(L = "\U250C", M = "\U252C", R = "\U2510"),
-    BOTTOM = list(L = "\U2514", M = "\U2534", R = "\U2518"),
-    H = "\U2500",
-    V = "\U2502"
-  ), 
-  double = list(
-    TOP = list(L = "\U2554", M = "\U2566", R = "\U2557"),
-    BOTTOM = list(L = "\U255A", M = "\U2569", R = "\U255D"),
-    H = "\U2550",
-    V = "\U2551"
-  ),
-  `single-double` = list(
-    TOP = list(L = "\U2553", M = "\U2565", R = "\U2556"),
-    BOTTOM = list(L = "\U2559", M = "\U2568", R = "\U255C"),
-    H = "\U2500",
-    V = "\U2502"
-  ),
-  `double-single` = list(
-    TOP = list(L = "\U2552", M = "\U2564", R = "\U2555"),
-    BOTTOM = list(L = "\U2558", M = "\U2567", R = "\U255B"),
-    H = "\U2550",
-    V = "\U2551"
-  ),
-
-  classic = list(
-    TOP = list(L = "+", M = "+", R = "+"),
-    BOTTOM = list(L = "+", M = "+", R = "+"),
-    H = "-",
-    V = "|"
-  )
-)
 
 cli_row <- function(row, sep = cli_box_styles()[["single", "vertical"]]) {
   ansi_string(paste0(paste0(sep, row, collapse = ""), sep))
-}
-
-box_line <- function(symbols, widths, top = TRUE) {
-  if (!length(widths)) return("")
-
-  DECO <- if (top) symbols$TOP else symbols$BOTTOM
-  .cell <- function(i) {
-    hr <- strrep(symbols$H, widths[i])
-    if (i > 1) c(DECO$M, hr) else hr
-  }
-
-  cells <- unlist(lapply(seq_along(widths), .cell), use.names = FALSE)
-  ansi_string(paste0(DECO$L, paste0(cells, collapse = ""), DECO$R))
 }
 
 
