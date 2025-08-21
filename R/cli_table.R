@@ -1,4 +1,6 @@
-cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
+cli_table <- function(mat, header = TRUE, border_style = "single",  
+  heatmap_columns, heatmap_colorspace = c('green', 'red'), ...) 
+{
   mat <- as.matrix(mat)
 
   cws <- column_widths(mat, header = header)
@@ -13,7 +15,11 @@ cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
   
   chars <- BOX_STYLES[[border_style]]
   V <- chars$V
+
+  ### table body
   tbl <- sapply(seq_len(nrow(mat)), \(i) cli_row(mat2[i, ], sep = V))
+
+  ### table header
   if (header) {
     tbl <- c(
       cli_row(headers, sep = V),
@@ -21,6 +27,8 @@ cli_table <- function(mat, header = TRUE, border_style = "single", ...) {
       tbl
     )
   }
+
+  ### assemble top + table + bottom
   tbl <- c(box_line(chars, cws), tbl, box_line(chars, cws, pos = "BOTTOM")) 
 
   tbl <- ansi_string(tbl)

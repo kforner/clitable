@@ -1,10 +1,10 @@
 Package: clitable
-Title: Render tables in text format in the command-line interface.
+Title: Render tables in text format in the terminal.
 Version: 0.2
 Authors@R: 
     person("Karl", "Forner", , "karl.forner@gmail.com", role = c("aut", "cre", "cph"))
-Description: Render tables in text format in the command-line interface 
-  using ANSI strings thanks to the cli package.
+Description: Render tables in text format in the terminal 
+  using ANSI strings thanks to the cli and crayon packages.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -13,6 +13,8 @@ URL: https://github.com/kforner/clitable
 BugReports: https://github.com/kforner/clitable/issues
 Imports:
   cli,
+  crayon,
+  grDevices,
   utils
 Suggests: 
   devtools,

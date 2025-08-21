@@ -13,8 +13,6 @@ test_that("cli_table", {
 })
 
 
-
-
 .extend_strings <- 
 test_that("extend_strings", {
   xs <- names(iris)
