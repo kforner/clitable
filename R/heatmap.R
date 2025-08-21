@@ -1,7 +1,7 @@
 # add a background color to a table cell
 
 heat_column <- function(mat, col, ...) {
-  mat[[col]] <- heatmap_nums(as.numeric(mat[[col]]), ...)
+  mat[, col] <- heatmap_nums(as.numeric(mat[, col]), ...)
   mat
 }
 
@@ -35,6 +35,4 @@ scale_numeric <- function(x, xmin = min(x, na.rm = TRUE), xmax = max(x, na.rm = 
 
   scaled
 }
-
-
 

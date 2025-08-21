@@ -5,7 +5,7 @@ test_that("heat_column", {
 
   mat <- head(mtcars, 10)
 
-  mat <- heat_column(mat, "mpg")
+  mat <- heat_column(mat, 1)
   mat <- heat_column(mat, "carb", ramp = grDevices::colorRamp(c("blue", "red")))
   mat <- heat_column(mat, "hp", xmin = 100, xmax = 110)
 

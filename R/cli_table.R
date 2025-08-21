@@ -1,7 +1,14 @@
 cli_table <- function(mat, header = TRUE, border_style = "single",  
-  heatmap_columns, heatmap_colorspace = c('green', 'red'), ...) 
+  heatmap_columns = NULL, heatmap_colorspace = c('green', 'red'), ...) 
 {
   mat <- as.matrix(mat)
+
+  if (length(heatmap_columns)) {
+    ramp <- grDevices::colorRamp(heatmap_colorspace)
+    for (col in heatmap_columns) {
+      mat <- heat_column(mat, col, ramp = ramp, ...)
+    }
+  }
 
   cws <- column_widths(mat, header = header)
   headers <- colnames(mat)

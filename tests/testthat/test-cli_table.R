@@ -10,6 +10,19 @@ test_that("cli_table", {
     expect_snapshot(cat(cli_table(df, border_style = style, header = FALSE), sep = "\n"))
   }
 
+  ### heatmap_columns
+  df <- head(mtcars, 10)
+
+  ct <- cli_table(df, heatmap_columns = list(1, "hp", "carb"))
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  ## with custom colors
+  ct <- cli_table(df, heatmap_columns = list(1, 4, "carb"), heatmap_colorspace = c("blue", "yellow"))
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  ## with custom range
+  ct <- cli_table(df, heatmap_columns = 1, xmin = 18, xmax = 22)
+  expect_snapshot(cat(ct, sep = "\n"))
 })
 
 
