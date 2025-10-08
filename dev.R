@@ -1,5 +1,6 @@
 library(devtools)
 
+load_all()
 check_man()
 document()
 

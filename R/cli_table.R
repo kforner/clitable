@@ -1,7 +1,10 @@
-cli_table <- function(mat, header = TRUE, border_style = "single",  
-  heatmap_columns = NULL, heatmap_colorspace = c('green', 'red'), ...) 
+cli_table <- function(mat, header = TRUE, header_style = NULL, 
+  border_style = "single",  
+  heatmap_columns = NULL, heatmap_colorspace = c('green', 'red'), 
+  hilite_rows = NULL, hilite_style = 'bgRed',
+  NA_style = NULL,
+  ...) 
 {
-  mat <- as.matrix(mat)
 
   if (length(heatmap_columns)) {
     ramp <- grDevices::colorRamp(heatmap_colorspace)
@@ -9,6 +12,8 @@ cli_table <- function(mat, header = TRUE, border_style = "single",
       mat <- heat_column(mat, col, ramp = ramp, ...)
     }
   }
+
+  mat <- to_character_matrix(mat, NA_style)
 
   cws <- column_widths(mat, header = header)
   headers <- colnames(mat)
@@ -26,10 +31,15 @@ cli_table <- function(mat, header = TRUE, border_style = "single",
   ### table body
   tbl <- sapply(seq_len(nrow(mat)), \(i) cli_row(mat2[i, ], sep = V))
 
+  if (length(hilite_rows)) {
+    if (any(is.na(hilite_rows))) stop("NA not supported in hilite_rows")
+    tbl[hilite_rows] <- crayon::style(tbl[hilite_rows], hilite_style)
+  }
+
   ### table header
   if (header) {
     tbl <- c(
-      cli_row(headers, sep = V),
+      crayon::style(cli_row(headers, sep = V), header_style),
       box_line(chars, cws, pos = "MID"), 
       tbl
     )
@@ -41,14 +51,18 @@ cli_table <- function(mat, header = TRUE, border_style = "single",
   tbl <- ansi_string(tbl)
 
   tbl
-}
 
+}
+# takes care of NAs
+to_character_matrix <- function(df, NA_style = NULL) {
+  mat <- as.matrix(df)
+  mat[is.na(mat)] <- crayon::style("NA", NA_style)
+  mat
+}
 
 cli_row <- function(row, sep = cli_box_styles()[["single", "vertical"]]) {
   ansi_string(paste0(paste0(sep, row, collapse = ""), sep))
 }
-
-
 
 extend_strings <- function(xs, width) {
   nb_to_fill <- width - ansi_nchar(xs)

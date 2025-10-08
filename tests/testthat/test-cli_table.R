@@ -23,6 +23,93 @@ test_that("cli_table", {
   ## with custom range
   ct <- cli_table(df, heatmap_columns = 1, xmin = 18, xmax = 22)
   expect_snapshot(cat(ct, sep = "\n"))
+
+  ### hilite rows
+  # one by index
+  ct <- cli_table(df, hilite_rows = 2)
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  # multiple
+  ct <- cli_table(df, hilite_rows = c(3, 1, 7))
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  # using boolean
+  ct <- cli_table(df, hilite_rows = (seq_len(nrow(df)) %% 2 == 0))
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  # boolean with NA
+  bools <-  seq_len(nrow(df)) %% 2 == 0
+  bools[3] <- NA
+  expect_error(cli_table(df, hilite_rows = bools), "NA not supported in hilite_rows")
+
+  # header
+  ct <- cli_table(df, header = FALSE)
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  # header_style
+  ct <- cli_table(df)
+  expect_false(crayon::has_style(ct[2]))
+
+  ct <- cli_table(df, header_style = "bold")
+  expect_true(crayon::has_style(ct[2]))
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  ### matrix/df with NAs
+  # default
+  df <- head(datasets::penguins)
+  ct <- cli_table(df)
+  expect_identical(ct[1], "┌───────┬─────────┬────────┬────────┬───────────┬─────────┬──────┬────┐")
+  expect_match(ct[7], "NA", fixed = TRUE)
+  expect_snapshot(cat(ct, sep = "\n"))
+
+  # custom
+  ct <- cli_table(df, NA_style = "strikethrough")
+  expect_match(ct[7], crayon::style("NA", "strikethrough"), fixed = TRUE)
+  expect_snapshot(cat(ct, sep = "\n"))
+})
+
+
+
+.cli_table_and_cli <- 
+test_that("cli_table_and_crayon", {
+  local_reproducible_output(crayon = TRUE, unicode = TRUE)
+  df <- head(datasets::mtcars)
+
+  df[1, 1] <- with(getNamespace("crayon"), yellow$bgMagenta$bold(3))
+  df[2, 2] <- with(getNamespace("crayon"), green(
+    'I am a green line ' %+%
+    blue$underline$bold('with a blue substring') %+%
+    ' that becomes green again!'
+  ))
+  ct <- cli_table(df)
+
+  expect_snapshot(cat(ct, sep = "\n"))
+})
+
+
+.to_character_matrix <- 
+test_that("to_character_matrix", {
+
+  ### df without NA: same as as.matrix
+  df <- head(datasets::iris)
+  expect_identical(to_character_matrix(df), as.matrix(df))
+  
+  ### df with NA 
+  # no style
+  df <- head(datasets::penguins)
+  mat <- to_character_matrix(df)
+
+  expect_false(identical(mat, as.matrix(df)))
+  expect_identical(unique(mat[is.na(df)]), "NA")
+  expect_identical(mat[!is.na(df)], as.matrix(df)[!is.na(df)])
+
+  # with style
+  local_reproducible_output(crayon = TRUE, unicode = TRUE)
+  df <- head(datasets::penguins)
+  mat <- to_character_matrix(df, "bold")
+  
+  expect_identical(mat[!is.na(df)], as.matrix(df)[!is.na(df)])
+  expect_identical(unique(mat[is.na(df)]), crayon::style("NA", "bold"))
 })
 
 
@@ -50,6 +137,16 @@ test_that("column_widths", {
   ### header = FALSE
   ws2 <- column_widths(mat, header = FALSE)
   expect_equal(ws2, c(3L, 3L, 3L, 3L, 6L))
+
+  ### regression: NAs due to NAs in the matrix
+  mat <- as.matrix(head(datasets::penguins))
+  ws <- column_widths(mat)
+  expect_equal(sum(is.na(ws)), 5)
+
+  # should use to_character_matrix() instead
+  mat <- to_character_matrix(head(datasets::penguins))
+  ws <- column_widths(mat)
+  expect_equal(sum(is.na(ws)), 0)
 })
 
 

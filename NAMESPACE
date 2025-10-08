@@ -2,5 +2,9 @@
 
 importFrom(cli,ansi_nchar)
 importFrom(cli,ansi_string)
+importFrom(cli,cat_line)
 importFrom(cli,is_utf8_output)
 importFrom(cli,rule)
+importFrom(crayon,num_colors)
+importFrom(grDevices,col2rgb)
+importFrom(grDevices,rgb)
