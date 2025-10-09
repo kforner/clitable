@@ -10,7 +10,14 @@ Render tables in text format in the terminal using ANSI strings thanks to the 'c
 }
 \section{Features}{
 
-TODO
+\itemize{
+\item can display any ansi string (without end of lines) content
+\item multiple table border styles: single, double, single-double, double-single, classic
+\item can display heatmaps
+\item can highlight rows
+\item can display NAs with custom style
+\item few dependencies: only \code{crayon} and \code{cli}
+}
 }
 
 \seealso{

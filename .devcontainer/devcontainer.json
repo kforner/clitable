@@ -16,7 +16,9 @@
 			"installRadian": true,
 			"installVscDebugger": true,
 			"installBspm": true
-		}
+		},
+
+    "ghcr.io/rocker-org/devcontainer-features/pandoc:1": {}
 
     // ,"ghcr.io/rocker-org/devcontainer-features/r-dependent-packages:latest": {}
 

@@ -1,3 +1,28 @@
+#' generates a text table
+#' 
+#' @param mat                 the table content to print, can be a data.frame or a matrix
+#' @param header              whether to use the row names as  table headers
+#' @param header_style        the (crayon) style to use to print the headers (cf [crayon::style()]
+#' @param border_style        the style to use for the table borders, one of `r names(BOX_STYLES)`
+#' @param heatmap_columns     the columns that should be displayed as heatmaps, as a vector of column indices, names 
+#'  or logicals
+#' @param heatmap_colorspace  the colorspace to use for the heatmaps, to be passed to [grDevices::colorRamp()]
+#' @param hilite_rows         the rows to highlight, as a vector of column indices, names or logicals
+#' @param hilite_style        the (crayon) style to use to highlight the rows (cf [crayon::style()]
+#' @param NA_style            the (crayon) style to use to highlight the NA values (cf [crayon::style()]
+#' @inheritDotParams scale_numeric
+#' 
+#' @return the lines of the text table as an ansi_string vector
+#' @export
+#' @examples
+#'   df <- head(datasets::penguins, 20)
+#'   ct <- cli_table(df, header_style = "bold",
+#'     NA_style = "strikethrough",
+#'     heatmap_columns = list("flipper_len"), xmin = 180, xmax = 200,
+#'     hilite_rows = !is.na(df$sex) & df$sex == "female" & df$bill_dep >= 19, 
+#'     hilite_style = "bgGreen"
+#'   )
+#'   cat(ct, sep = "\n")
 cli_table <- function(mat, header = TRUE, header_style = NULL, 
   border_style = "single",  
   heatmap_columns = NULL, heatmap_colorspace = c('green', 'red'), 
@@ -48,10 +73,7 @@ cli_table <- function(mat, header = TRUE, header_style = NULL,
   ### assemble top + table + bottom
   tbl <- c(box_line(chars, cws), tbl, box_line(chars, cws, pos = "BOTTOM")) 
 
-  tbl <- ansi_string(tbl)
-
-  tbl
-
+  ansi_string(tbl)
 }
 # takes care of NAs
 to_character_matrix <- function(df, NA_style = NULL) {

@@ -1,5 +1,9 @@
 
-
+#' a function to demo the clitable package
+#' @return nothing
+#' @export 
+#' @examples 
+#' demo()
 demo <- function() {
   df <- head(datasets::iris)
   ####################
