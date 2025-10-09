@@ -3,7 +3,7 @@
 test_that("heat_column", {
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
 
-  mat <- head(mtcars, 10)
+  mat <- head(datasets::mtcars, 10)
 
   mat <- heat_column(mat, 1)
   mat <- heat_column(mat, "carb", ramp = grDevices::colorRamp(c("blue", "red")))

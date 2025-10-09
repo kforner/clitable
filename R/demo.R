@@ -1,7 +1,7 @@
 
 
 demo <- function() {
-  df <- head(iris)
+  df <- head(datasets::iris)
   ####################
   cli::cli_h1("clitable border styles")
 
@@ -14,7 +14,7 @@ demo <- function() {
   ####################
   cli::cli_h1("heatmap columns")
 
-  df <- head(mtcars, 10)
+  df <- head(datasets::mtcars, 10)
   cli::cli_h2("default heatmap settings")
   ct <- cli_table(df, heatmap_columns = list(1, "hp", "carb"))
   cat(ct, sep = "\n")
@@ -31,27 +31,27 @@ demo <- function() {
 
   ####################
   cli::cli_h1("hilite rows")
-  df <- head(mtcars, 10)
+  df <- head(datasets::mtcars, 10)
   ct <- cli_table(df, hilite_rows = c(3, 1, 7))
   cat(ct, sep = "\n")
 
   ########################
   cli::cli_h1("combined")
-  df <- head(mtcars, 10)
+  df <- head(datasets::mtcars, 10)
   ct <- cli_table(df, heatmap_columns = list(1, 4, "carb"), hilite_rows = df$hp > 150, hilite_style = "yellow")
   cat(ct, sep = "\n")
 
 
   ####################
   cli::cli_h1("not all numeric")
-  df <- head(penguins)
+  df <- head(datasets::penguins)
   df$sex <- ifelse(!is.na(df$sex) & df$sex == "female", crayon::blue$underline$bold(df$sex), df$sex)
   ct <- cli_table(df)
   cat(ct, sep = "\n")
 
   ###############################
   cli::cli_h1("all bells and whistles")
-  df <- head(penguins, 20)
+  df <- head(datasets::penguins, 20)
 
   df$species <- as.character(df$species)
 

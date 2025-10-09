@@ -5,7 +5,7 @@ test_that("box_line", {
 
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
 
-  ws <- ansi_nchar(names(iris))
+  ws <- ansi_nchar(names(datasets::iris))
 
   ### single
   line <- box_line(BOX_STYLES[["single"]], ws)

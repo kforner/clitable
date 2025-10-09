@@ -4,9 +4,9 @@
 \name{clitable-package}
 \alias{clitable}
 \alias{clitable-package}
-\title{clitable: Render tables in text format in the terminal.}
+\title{clitable: Render Tables in Text for the Terminal}
 \description{
-Render tables in text format in the terminal using ANSI strings thanks to the cli and crayon packages.
+Render tables in text format in the terminal using ANSI strings thanks to the 'cli' and 'crayon' packages.
 }
 \section{Features}{
 

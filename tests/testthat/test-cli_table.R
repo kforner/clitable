@@ -2,7 +2,7 @@
 
 .cli_table <- 
 test_that("cli_table", {
-  df <- head(iris)
+  df <- head(datasets::iris)
 
   # boolean with NA
   bools <-  seq_len(nrow(df)) %% 2 == 0
@@ -19,7 +19,7 @@ test_that("cli_table", {
   }
 
   ### heatmap_columns
-  df <- head(mtcars, 10)
+  df <- head(datasets::mtcars, 10)
 
   ct <- cli_table(df, heatmap_columns = list(1, "hp", "carb"))
   expect_snapshot(cat(ct, sep = "\n"))
@@ -120,7 +120,7 @@ test_that("to_character_matrix", {
 
 .extend_strings <- 
 test_that("extend_strings", {
-  xs <- names(iris)
+  xs <- names(datasets::iris)
 
   xs2 <- extend_strings(xs, max(cli::ansi_nchar(xs)))
 
@@ -131,7 +131,7 @@ test_that("extend_strings", {
 
 .column_widths <- 
 test_that("column_widths", {
-  mat <- as.matrix(head(iris))
+  mat <- as.matrix(head(datasets::iris))
 
   ### header = TRUE
   ws <- column_widths(mat)
@@ -157,7 +157,7 @@ test_that("column_widths", {
 
 .add_margin_to_matrix <- 
 test_that("add_margin_to_matrix", {
-  mat <- as.matrix(head(iris))
+  mat <- as.matrix(head(datasets::iris))
   ### header = TRUE
   m0 <- add_margin_to_matrix(mat, 0)
   expect_identical(m0, mat)
@@ -181,7 +181,7 @@ test_that("add_margin_to_matrix", {
 .cli_row <- 
 test_that("cli_row", {
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
-  row <- names(iris)
+  row <- names(datasets::iris)
 
   x <- cli_row(row)
   expect_snapshot(cat(x, "\n"))
