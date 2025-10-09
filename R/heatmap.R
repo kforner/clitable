@@ -7,7 +7,9 @@ heat_column <- function(mat, col, ...) {
 
 heatmap_nums <- function(x, ramp = grDevices::colorRamp(c("green", "red")), ...) 
 {
-  if (length(x) <= 1 || sum(!is.na(x)) <= 1) return(ansi_string(as.character(x)))
+  if (length(x) <= 1 || sum(!is.na(x)) <= 1) {
+    return(ansi_string(as.character(x)))
+  }
 
   scaled <- scale_numeric(x, ...)
   rgb_by_row <- ramp(scaled)

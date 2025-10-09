@@ -9,12 +9,16 @@ test_that("heat_column", {
   mat <- heat_column(mat, "carb", ramp = grDevices::colorRamp(c("blue", "red")))
   mat <- heat_column(mat, "hp", xmin = 100, xmax = 110)
 
-  expect_snapshot(cat(cli_table(mat), sep = ""))
+  expect_snapshot(cat(cli_table(mat), sep = "\n"))
 })
 
 
 .heatmap_nums <- 
 test_that("heatmap_nums", {
+  ### edge cases
+  expect_identical(heatmap_nums(1), ansi_string(as.character("1")))
+  expect_identical(heatmap_nums(c(1, NA)), ansi_string(as.character(c(1, NA))))
+
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
 
   x <- c(0.1, 100, -2.5, 20, 78.2, NA)

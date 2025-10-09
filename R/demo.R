@@ -45,20 +45,21 @@ demo <- function() {
   ####################
   cli::cli_h1("not all numeric")
   df <- head(penguins)
-  df$sex <- with(getNamespace("crayon"), ifelse(df$sex == "female", blue$underline$bold(df$sex), df$sex) )
-
+  df$sex <- ifelse(!is.na(df$sex) & df$sex == "female", crayon::blue$underline$bold(df$sex), df$sex)
   ct <- cli_table(df)
   cat(ct, sep = "\n")
 
   ###############################
   cli::cli_h1("all bells and whistles")
-  df <- head(penguins)
+  df <- head(penguins, 20)
+
   df$species <- as.character(df$species)
+
   df[1, 1] <- crayon::style("ADELIE", "underline","bgYellow")
   ct <- cli_table(df, header_style = "bold",
     NA_style = "strikethrough",
-    heatmap_columns = list("body_mass"), 
-    hilite_rows = !is.na(df$sex) & df$sex == "female" , 
+    heatmap_columns = list("flipper_len"), xmin = 180, xmax = 200,
+    hilite_rows = !is.na(df$sex) & df$sex == "female" & df$bill_dep >= 19, 
     hilite_style = "bgGreen"
   )
   cat(ct, sep = "\n")

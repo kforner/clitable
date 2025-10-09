@@ -60,7 +60,7 @@ to_character_matrix <- function(df, NA_style = NULL) {
   mat
 }
 
-cli_row <- function(row, sep = cli_box_styles()[["single", "vertical"]]) {
+cli_row <- function(row, sep = BOX_STYLES$single$V) {
   ansi_string(paste0(paste0(sep, row, collapse = ""), sep))
 }
 
@@ -94,34 +94,6 @@ add_margin_to_matrix <- function(mat, margin = 1, header = TRUE) {
 }
 
 
-
-  # spacer <- paste0(rep(" ", margin), collapse = "")
-
-# N.B: shamelessly borrowed from cli since not exported
-cli_box_styles <- function () 
-{
-    styles <- list(single = list(top_left = "┌", top_right = "┐", 
-        bottom_right = "┘", bottom_left = "└", vertical = "│", 
-        horizontal = "─"), double = list(top_left = "╔", 
-        top_right = "╗", bottom_right = "╝", bottom_left = "╚", 
-        vertical = "║", horizontal = "═"), round = list(top_left = "╭", 
-        top_right = "╮", bottom_right = "╯", bottom_left = "╰", 
-        vertical = "│", horizontal = "─"), `single-double` = list(top_left = "╓", 
-        top_right = "╖", bottom_right = "╜", bottom_left = "╙", 
-        vertical = "║", horizontal = "─"), `double-single` = list(top_left = "╒", 
-        top_right = "╕", bottom_right = "╛", bottom_left = "╘", 
-        vertical = "│", horizontal = "═"), classic = list(top_left = "+", 
-        top_right = "+", bottom_right = "+", bottom_left = "+", 
-        vertical = "|", horizontal = "-"), none = list(top_left = " ", 
-        top_right = " ", bottom_right = " ", bottom_left = " ", 
-        vertical = " ", horizontal = " "))
-    if (!is_utf8_output()) {
-        for (n in setdiff(names(styles), c("classic", "none"))) {
-            styles[[n]] <- styles[["classic"]]
-        }
-    }
-    do.call(rbind, styles)
-}
 
 # N.B: shamelessly borrowed from cli since not exported
 cli_make_space <- function (num, filling = " ") 

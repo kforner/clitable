@@ -1,5 +1,8 @@
 .box_line <- 
 test_that("box_line", {
+  ### edge cases
+  expect_identical(box_line(BOX_STYLES[["single"]], NULL), "")
+
   local_reproducible_output(crayon = TRUE, unicode = TRUE)
 
   ws <- ansi_nchar(names(iris))
@@ -18,6 +21,8 @@ test_that("box_line", {
       )
     )
   }
+
+
 })
 
 

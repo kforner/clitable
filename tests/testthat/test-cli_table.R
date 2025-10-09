@@ -2,8 +2,16 @@
 
 .cli_table <- 
 test_that("cli_table", {
-  local_reproducible_output(crayon = TRUE, unicode = TRUE)
   df <- head(iris)
+
+  # boolean with NA
+  bools <-  seq_len(nrow(df)) %% 2 == 0
+  bools[3] <- NA
+  expect_error(cli_table(df, hilite_rows = bools), "NA not supported in hilite_rows")
+
+
+  local_reproducible_output(crayon = TRUE, unicode = TRUE)
+
 
   for (style in names(BOX_STYLES)) {
     expect_snapshot(cat(cli_table(df, border_style = style), sep = "\n"))
@@ -37,10 +45,7 @@ test_that("cli_table", {
   ct <- cli_table(df, hilite_rows = (seq_len(nrow(df)) %% 2 == 0))
   expect_snapshot(cat(ct, sep = "\n"))
 
-  # boolean with NA
-  bools <-  seq_len(nrow(df)) %% 2 == 0
-  bools[3] <- NA
-  expect_error(cli_table(df, hilite_rows = bools), "NA not supported in hilite_rows")
+
 
   # header
   ct <- cli_table(df, header = FALSE)

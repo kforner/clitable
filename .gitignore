@@ -1,0 +1,7 @@
+.Rproj.user
+.*
+*.html
+inst/doc
+docs
+/doc/
+/Meta/
